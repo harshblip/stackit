@@ -21,7 +21,7 @@ app.post('/upload', upload.single('csvFile'), (req, res) => {
 
   // Process the CSV data (you can use csv-parser or other libraries for parsing)
   csv({ headers: true })
-    .fromString(fileBuffer)
+    .toString(fileBuffer)
     .on('data', (data) => results.push(data))
     .on('end', () => {
       // At this point, `results` contains your CSV data as an array of objects
@@ -38,7 +38,7 @@ app.post('/select-columns', (req, res) => {
   
     // Process the CSV data (you can use csv-parser or other libraries for parsing)
     csv({ headers: true })
-      .fromString(fileBuffer)
+      .toString(fileBuffer)
       .on('data', (data) => results.push(data))
       .on('end', () => {
         // Extract selected columns
