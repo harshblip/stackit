@@ -32,24 +32,35 @@ app.post('/upload', upload.single('csvFile'), (req, res) => {
         .write(fileBuffer);
 });
 
-app.post('/select-columns', (req, res) => {
+app.post('/select-columns', upload.single('csvFile'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+
+    const fileBuffer = req.file.buffer;
     const { selectedColumns } = req.body; // Assuming selectedColumns is an array of column indices
-    const fileBuffer = req.file.buffer.toString();
+
+    if (!Array.isArray(selectedColumns)) {
+        return res.status(400).send('Invalid selectedColumns format.');
+    }
+
     const results = [];
 
-    // Process the CSV data (you can use csv-parser or other libraries for parsing)
+    // Process the CSV data using csv-parser
     csv({ headers: true })
-        .toString(fileBuffer)
         .on('data', (data) => results.push(data))
         .on('end', () => {
+            // At this point, `results` contains your CSV data as an array of objects
+            // You can process the data or save it to a database
+
             // Extract selected columns
             const selectedData = results.map((row) =>
                 selectedColumns.map((index) => row[index])
             );
 
-            // Send the selected columns data as JSON response
             res.status(200).json(selectedData);
-        });
+        })
+        .write(fileBuffer);
 });
 
 app.listen(port, () => {
