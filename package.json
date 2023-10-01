@@ -2,7 +2,7 @@
   "name": "stackit",
   "version": "1.0.0",
   "description": "csv-parser",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js"
   },
