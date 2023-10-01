@@ -63,6 +63,11 @@ app.post('/select-columns', upload.single('csvFile'), (req, res) => {
         .write(fileBuffer);
 });
 
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
